@@ -56,14 +56,7 @@ impl LineLayout {
         if x >= self.width {
             None
         } else {
-            for run in self.runs.iter().rev() {
-                for glyph in run.glyphs.iter().rev() {
-                    if glyph.position.x <= x {
-                        return Some(glyph.index);
-                    }
-                }
-            }
-            Some(0)
+            Some(self.closest_index_for_x(x))
         }
     }
 
@@ -74,19 +67,23 @@ impl LineLayout {
         let mut prev_x = px(0.);
 
         for run in self.runs.iter() {
-            for glyph in run.glyphs.iter() {
-                if glyph.position.x >= x {
-                    if glyph.position.x - x < x - prev_x {
-                        return glyph.index;
+            for glyph in run
+                .glyphs
+                .iter()
+                .map(|glyph| (glyph.position.x, glyph.index))
+                .chain(std::iter::once((self.width, self.len)))
+            {
+                if glyph.0 >= x {
+                    if glyph.0 - x < x - prev_x {
+                        return glyph.1;
                     } else {
                         return prev_index;
                     }
                 }
-                prev_index = glyph.index;
-                prev_x = glyph.position.x;
+                prev_index = glyph.1;
+                prev_x = glyph.0;
             }
         }
-
         self.len
     }
 
