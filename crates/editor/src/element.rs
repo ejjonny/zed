@@ -887,7 +887,7 @@ impl EditorElement {
         cx: &mut ElementContext,
     ) {
         let start_row = layout.visible_display_row_range.start;
-        let content_origin = text_bounds.origin + point(layout.gutter_margin, Pixels::ZERO);
+        let content_origin = text_bounds.origin;
         let line_end_overshoot = 0.15 * layout.position_map.line_height;
         let whitespace_setting = self
             .editor
@@ -1182,7 +1182,7 @@ impl EditorElement {
         layout: &mut LayoutState,
         cx: &mut ElementContext,
     ) {
-        let content_origin = text_bounds.origin + point(layout.gutter_margin, Pixels::ZERO);
+        let content_origin = text_bounds.origin;
         let start_row = layout.visible_display_row_range.start;
         if let Some((position, mut context_menu)) = layout.context_menu.take() {
             let available_space = size(AvailableSpace::MinContent, AvailableSpace::MinContent);
